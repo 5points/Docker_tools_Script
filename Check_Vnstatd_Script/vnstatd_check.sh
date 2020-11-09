@@ -8,7 +8,7 @@ until
         echo "3.check vnstat hour"
         echo "4.check vnstat month"
         echo "5.check vnstat top/10day"
-#        echo "6.enter the container"
+        echo "6.enter the container"
         echo "0.exit menu"
         read input
         test $input = 7
@@ -19,7 +19,7 @@ until
                 3)CHECK_CMD -h;;
                 4)CHECK_CMD -m;;
                 5)CHECK_CMD -t;;
-#                6)INPUT_CMD;;
+                6)INPUT_CMD;;
                 0)exit;;
                 esac
                 done
