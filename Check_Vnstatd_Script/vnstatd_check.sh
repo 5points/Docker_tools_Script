@@ -14,12 +14,12 @@ until
         test $input = 7
         do
                 case $input in
-                1)CHECK_CMD -d;;
-                2)CHECK_CMD -q;;
-                3)CHECK_CMD -h;;
-                4)CHECK_CMD -m;;
-                5)CHECK_CMD -t;;
-#                6)INPUT_CMD;;
+                1)$CHECK_CMD -d;;
+                2)$CHECK_CMD -q;;
+                3)$CHECK_CMD -h;;
+                4)$CHECK_CMD -m;;
+                5)$CHECK_CMD -t;;
+#                6)$INPUT_CMD;;
                 0)exit;;
                 esac
                 done
