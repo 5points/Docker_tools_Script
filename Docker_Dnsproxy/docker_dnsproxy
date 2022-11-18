@@ -1,0 +1,18 @@
+docker run -d \
+  --name=dnsproxy \
+  --net=host \
+  --restart=always \
+  -e "ARGS=
+      --fastest-addr 
+      --edns 
+      --all-servers
+      --tls-min-version=1.2
+      -p 53
+      -u tls://1.1.1.1:853
+      -u tls://1.0.0.1:853
+      -u tls://8.8.8.8:853
+      -u tls://8.8.4.4:853
+      -u https://dns.google/dns-query
+      -u https://1.1.1.1/dns-query" \
+#  chenhw2/dnsproxy
+#  akadan47/dnsproxy
