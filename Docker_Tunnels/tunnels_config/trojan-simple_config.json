@@ -1,0 +1,24 @@
+{
+    "run_type": "server",
+    "local_addr": "0.0.0.0",
+    "local_port": 443,
+    "remote_addr": "www.catalog.update.microsoft.com",
+    "remote_port": 80,
+    "password": [
+        "password"
+    ],
+    "ssl": {
+        "cert": "/etc/certs/plugin.crt",
+        "key": "/etc/certs/plugin.key",
+	"sni": "yourdomian.com"
+    },
+    "router":{
+        "enabled": true,
+        "block": [
+            "geoip:cn",
+            "geoip:private",
+            "geosite:cn",
+            "geosite:geolocation-cn"
+        ]
+    }
+}

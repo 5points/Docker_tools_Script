@@ -1,0 +1,11 @@
+tunnel: <tunnel-id> or <tunnel-name>
+credentials-file: /root/.cloudflared/<tunnel-id>.json
+protocol: http2
+originRequest:
+  connectTimeout: 130s
+  disableChunkedEncoding: true
+  noTLSVerify: true
+ingress:
+  - hostname: <tunnel-hostname>
+    service: https://localhost:8443
+  - service: http_status:404

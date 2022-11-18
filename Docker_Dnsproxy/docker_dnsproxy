@@ -1,0 +1,17 @@
+#!/bin/zsh
+#!/bin/bash
+#!/bin/sh
+DOCKER_IMAGE="chenhw2/dnsproxy" # x86_64:chenhw2/dnsproxy armv7/v8:akadan47/dnsproxy or vmstan/dnsproxy
+
+docker run -d \
+  --name=dnsproxy \
+  --net=host \
+  --restart=always \
+  -e "ARGS=
+      --fastest-addr --all-servers --edns
+      --tls-min-version=1.2
+      -p 53
+      -b tls://1.1.1.1:853 -b tls://1.0.0.1:853 -b tls://8.8.8.8:853 -b tls://8.8.4.4:853
+      -u https://dns.google/dns-query -u https://cloudflare-dns.com/dns-query -u https://dns.quad9.net/dns-query
+      -f https://mozilla.cloudflare-dns.com/dns-query -f https://1.1.1.1/dns-query -f tls://185.222.222.222:853 -f tls://45.11.45.11:853" \
+      ${DOCKER_IMAGE}
