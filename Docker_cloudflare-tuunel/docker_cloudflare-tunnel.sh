@@ -10,6 +10,7 @@ TUNNEL_NAME=""
 
 docker run -itd \
    --name ${DOCKER_NAME} \
+   --restart unless-stopped \
    --privileged=true \
    --user $(id -u) \
    --net host \
