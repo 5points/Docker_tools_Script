@@ -3,7 +3,7 @@
 #step0-create cloudflard volume: docker volume create cloudflared
 #step1-create certificate: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel login
 #step2-create tunnel name: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel create <tunnelname>
-#step4-create tunnel config: touch $(docker volume inspect cloudflared | grep Mountpoint | awk  '{ gsub("\"",""); print $2}' | sed  s/,//g | awk '{print $0 "/"}') config.yml
+#step4-create tunnel config: touch $(docker volume inspect cloudflared | grep Mountpoint | awk  '{ gsub("\"",""); print $2}' | sed  s/,//g | awk '{print $0 "/config.yml"}') 
 #step4-edit tunnel config: vim $(docker volume inspect cloudflared | grep Mountpoint | awk  '{ gsub("\"",""); print $2}' | sed  s/,//g | awk '{print $0 "/config.yml"}')
 #step5-add tunnel route dns: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel --config /root/.cloudflared/config.yml route dns <tunnelname> <tunnel-hostname>
 DOCKER_NAME=""
