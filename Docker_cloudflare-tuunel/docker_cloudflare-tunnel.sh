@@ -11,6 +11,7 @@ TUNNEL_NAME=""
 docker run -itd \
    --name ${DOCKER_NAME} \
    --restart unless-stopped \
+   --log-opt max-size=10k \
    --privileged=true \
    --user $(id -u) \
    --net host \
