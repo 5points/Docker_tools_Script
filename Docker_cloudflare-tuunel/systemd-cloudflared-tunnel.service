@@ -1,0 +1,13 @@
+# example: /etc/systemd/system/cloudflared-tunnel.service
+[Unit]
+Description=Cloudflare Tunnel
+After=network.target
+
+[Service]
+ExecStart=cloudflared tunnel --config /etc/cloudflared/config.yml run <tunnel-name>
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
