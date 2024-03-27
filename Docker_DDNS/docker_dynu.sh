@@ -28,7 +28,7 @@ echo -e "$DOCKER_COMMAND"
 
 # Save to Sh script
 echo "#!/bin/sh" > "$FILENAME.sh"
-echo "$DOCKER_COMMAND" >> "$FILENAME.sh"
+echo -e "$DOCKER_COMMAND" >> "$FILENAME.sh"
 chmod +x "$FILENAME.sh"
 
 echo "New Docker start script has been saved to $FILENAME.sh"
