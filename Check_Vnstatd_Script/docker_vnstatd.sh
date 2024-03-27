@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# 自定义容器名称
 CONTAINER_NAME="vnstatd"
-# 自定义卷名称
 VOLUME_NAME="vnstat_data"
 
 echo "Check if the volume is enabled"
