@@ -16,6 +16,6 @@ docker run -d \
   --privileged=true \
   -v /etc/localtime:/etc/localtime \
   -v "$VOLUME_NAME":/var/lib/vnstat \
-  carlosedp/vnstat
+  carlosedp/vnstatd
 
 echo "Container $CONTAINER_NAME started successfully!"
