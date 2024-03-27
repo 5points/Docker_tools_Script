@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 CONTAINER_NAME="vnstatd"
 VOLUME_NAME="vnstat_data"
@@ -7,6 +7,7 @@ echo "Check if the volume is enabled"
 if ! docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
   echo "Creating volume $VOLUME_NAME..."
   docker volume create "$VOLUME_NAME"
+  echo "$VOLUME_NAME" volume create complete
 fi
 
 docker run -d \
