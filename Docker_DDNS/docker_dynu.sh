@@ -24,7 +24,7 @@ DOCKER_COMMAND="docker run -itd \
    dokeraj/dynu-updater:latest"
 
 echo "Docker command to start the container:"
-echo "$DOCKER_COMMAND"
+echo -e "$DOCKER_COMMAND"
 
 # Save to Sh script
 echo "#!/bin/sh" > "$FILENAME.sh"
