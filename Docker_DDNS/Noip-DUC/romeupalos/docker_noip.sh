@@ -32,7 +32,7 @@ docker run -it --rm --user $(id -u) -v noip-$DDNSVOL_NAME:/usr/local/etc romeupa
 
 echo "Running the Docker container..."
 docker run -d \
-    --name $CONTAINER_NAME \
+    --name noip-$CONTAINER_NAME \
     --user $(id -u) \
     --restart=always \
     --log-opt max-size=1m \
@@ -44,7 +44,7 @@ echo "Setup completed successfully!"
 # Generate Docker run script in the current directory
 DOCKER_RUN_COMMAND=$(cat <<'EOF'
 docker run -d \
-    --name $CONTAINER_NAME \
+    --name noip-$CONTAINER_NAME \
     --user $(id -u) \
     --restart=always \
     --log-opt max-size=1m \
@@ -53,6 +53,7 @@ docker run -d \
 EOF
 )
 
+echo -e "#!/usr/bin/env sh" > "${SCRIPT_FILENAME}.sh"
 echo "$DOCKER_RUN_COMMAND" > "${SCRIPT_FILENAME}.sh"
 chmod +x "${SCRIPT_FILENAME}.sh"
 
