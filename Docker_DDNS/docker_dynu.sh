@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#-e USERNAME=This is your dynu login username.
+#-e PASSWORD=This is your dynu login password.
+#-e HOSTNAMES=This are your domains that you want to update.
+# wget -qO- https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_DDNS/docker_dynu.sh | sh
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_DDNS/docker_dynu.sh)"
 
 read -p "Enter your Dynu login username: " -e USERNAME
 read -p "Enter your Dynu login password: " -e PASSWORD
