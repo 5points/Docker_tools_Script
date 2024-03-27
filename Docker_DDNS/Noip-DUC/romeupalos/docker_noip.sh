@@ -54,7 +54,7 @@ EOF
 )
 
 echo -e "#!/usr/bin/env sh" > "${SCRIPT_FILENAME}.sh"
-echo "$DOCKER_RUN_COMMAND" > "${SCRIPT_FILENAME}.sh"
+echo "$DOCKER_RUN_COMMAND" >> "${SCRIPT_FILENAME}.sh"
 chmod +x "${SCRIPT_FILENAME}.sh"
 
 echo "Docker run script has been generated: ${SCRIPT_FILENAME}.sh"
