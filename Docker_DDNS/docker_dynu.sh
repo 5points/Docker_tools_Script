@@ -6,7 +6,7 @@ read -p "Enter your domains that you want to update (separate multiple domains b
 
 read -p "Enter the filename for the new script (without extension): " -e FILENAME
 
-DOCKER_COMMAND=$(cat <<EOF
+DOCKER_COMMAND=$(cat <<'EOF'
 docker run -itd \
    --name=dynuddns \
    --privileged=true \
