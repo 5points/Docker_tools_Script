@@ -42,7 +42,7 @@ docker run -d \
 echo "Setup completed successfully!"
 
 # Generate Docker run script in the current directory
-DOCKER_RUN_COMMAND=$(cat <<EOF
+DOCKER_RUN_COMMAND=$(cat <<'EOF'
 docker run -d \
     --name $CONTAINER_NAME \
     --user $(id -u) \
