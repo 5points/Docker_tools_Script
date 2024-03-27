@@ -1,25 +1,23 @@
-#!/usr/bin/env sh
 #!/usr/bin/env bash
-#!/usr/bin/env zsh
-if [[ "$(docker volume ls | grep -o vnstat_data)" = "$(echo vnstat_data)" ]];then 
-echo have vnstat_data
-else
-echo not have vnstat_data...
-echo create vnstat_data
-docker volume create vnstat_data
-echo vnstat_data create completed
+
+# 自定义容器名称
+CONTAINER_NAME="vnstatd"
+# 自定义卷名称
+VOLUME_NAME="vnstat_data"
+
+echo "Check if the volume is enabled"
+if ! docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
+  echo "Creating volume $VOLUME_NAME..."
+  docker volume create "$VOLUME_NAME"
 fi
 
-if [ $? -ne 0 ] && [[ "$(docker volume ls | grep -o vnstat_data)" = "$(echo vnstat_data)" ]];then
 docker run -d \
-  --name vnstatd \
+  --name "$CONTAINER_NAME" \
   --net=host \
   --restart=unless-stopped \
   --privileged=true \
   -v /etc/localtime:/etc/localtime \
-  -v vnstat_data:/var/lib/vnstat \
-  carlosedp/vnstatd
-else
-echo have a something wrong
-exit 0
-fi
+  -v "$VOLUME_NAME":/var/lib/vnstat \
+  carlosedp/vnstat
+
+echo "Container $CONTAINER_NAME started successfully!"
