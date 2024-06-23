@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+## wget -O tailscaled-upnp-watchdog.sh https://github.com/5points/Docker_tools_Script/raw/main/Docker_Tailscale/tailscaled-upnp-watchdog.sh && chmod a+x tailscaled-upnp-watchdog.sh
+## echo "0 * * * * /yourpath/tailscaled-upnp-watchdog.sh" | crontab -
 
 # Get the directory where the script is running
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
