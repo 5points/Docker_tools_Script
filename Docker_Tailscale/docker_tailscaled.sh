@@ -9,6 +9,7 @@
 docker run -itd \
   --name=tailscaled \
   --restart unless-stopped \
+  --log-opt max-size=1m 
   -v tailscale:/var/lib \
   -e TS_STATE_DIR=/var/lib/tailscale \
   --network=host \
