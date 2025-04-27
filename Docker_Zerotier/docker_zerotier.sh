@@ -7,6 +7,7 @@
 docker run -itd \
   --name zerotier-cli \
   --restart always \
+  --log-opt max-size=1m \
   -v zerotier-one:/var/lib/zerotier-one \
   --net host \
   --cap-add NET_ADMIN \
