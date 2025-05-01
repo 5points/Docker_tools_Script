@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+# Stored in /etc/init.d/ethtool-configuration
+# curl -L -O https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_Tailscale/alpine-ethtool-configuration /etc/init.d/ethtool-configuration
+# chmod +x /etc/init.d/ethtool-configuration
+
+command="/etc/networkd-dispatcher/routable.d/50-tailscale"
+command_args=""
+command_background="yes"
+
+depend() {
+    need net
+}
