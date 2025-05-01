@@ -1,0 +1,16 @@
+# Stored in /etc/systemd/system/ethtool-configuration-50-tailscale.service
+# curl -L -O https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_Tailscale/debian-ethtool-configuration-50-tailscale.service /etc/systemd/system/ethtool-configuration-50-tailscale.service
+# chmod +x /etc/systemd/system/ethtool-configuration-50-tailscale.service
+# daemon-reload
+# systemctl enable ethtool-configuration-50-tailscale.service && systemctl start ethtool-configuration-50-tailscale.service
+[Unit]
+Description=ethtool configuration-50-tailscale
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/docker_script/tailscale/routable.d/50-tailscale
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
