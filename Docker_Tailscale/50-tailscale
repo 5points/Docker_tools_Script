@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Stored in /etc/networkd-dispatcher/routable.d/50-tailscale
 # curl -L https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_Tailscale/50-tailscale -o /etc/networkd-dispatcher/routable.d/50-tailscale
 # chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
