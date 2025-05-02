@@ -4,10 +4,25 @@
 # chmod +x /etc/init.d/ethtool-configuration
 # rc-update update add ethtool-configuration && /etc/init.d/ethtool-configuration start
 
-command="/etc/networkd-dispatcher/routable.d/50-tailscale"
-command_args=""
-command_background="yes"
+COMMAND_PATH="/etc/networkd-dispatcher/routable.d/50-tailscale"
+
+name="Tailscaled ethtool-configuration"
+description="Runs the 50-tailscale script"
+command_background="no"
 
 depend() {
+    after networking
     need net
+    keyword="oneshot"
+}
+
+start() {
+    ebegin "Starting Tailscaled ethtool-configuration"
+    /etc/networkd-dispatcher/routable.d/50-tailscale
+    eend $?
+}
+
+stop() {
+    # Do nothing, this is a one-time script
+    :
 }
