@@ -18,7 +18,7 @@ depend() {
 
 start() {
     ebegin "Starting Tailscaled ethtool-configuration"
-    /etc/networkd-dispatcher/routable.d/50-tailscale
+    $COMMAND_PATH
     eend $?
 }
 
