@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+# Stored in /etc/init.d/tailscaled-upnp-watchdog
+# curl -L https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_Tailscale/alpine-ethtool-configuration -o /etc/init.d/tailscaled-upnp-watchdog
+# chmod +x /etc/init.d/tailscaled-upnp-watchdog
+# rc-update add tailscaled-upnp-watchdog && /etc/init.d/tailscaled-upnp-watchdog start
+
+COMMAND_PATH="/opt/docker-scripts/tailscaled/tailscaled-upnp-watchdog.sh"
+
+name="Tailscaled UPNP Watchdog"
+description="Runs the tailscaled-upnp-watchdog.sh script"
+command_background="no"
+
+depend() {
+    after docker networking
+    need net docker
+    keyword="oneshot"
+}
+
+start() {
+    ebegin "Starting Tailscaled UPNP Watchdog"
+    $COMMAND_PATH
+    eend $?
+}
+
+stop() {
+    # Do nothing, this is a one-time script
+    :
+}
