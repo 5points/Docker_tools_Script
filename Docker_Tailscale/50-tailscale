@@ -3,5 +3,6 @@
 # curl -O -L https://raw.githubusercontent.com/5points/Docker_tools_Script/main/Docker_Tailscale/50-tailscale /etc/networkd-dispatcher/routable.d/50-tailscale
 # chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
 
-NETDEV=$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")
+TARGET_IP="8.8.8.8"
+NETDEV=$(ip -o route get $TARGET_IP | cut -f 5 -d " ")
 ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
