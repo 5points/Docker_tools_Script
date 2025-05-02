@@ -9,8 +9,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-Environment=COMMAND_PATH=/opt/docker_script/tailscale/routable.d/50-tailscale
-ExecStart=$COMMAND_PATH
+Environment="COMMAND_PATH=/opt/docker_script/tailscale/routable.d/50-tailscale"
+ExecStart=/bin/bash "$COMMAND_PATH"
 RemainAfterExit=yes
 
 [Install]
