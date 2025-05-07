@@ -20,7 +20,7 @@ docker run -itd \
   --name="$CONTAINER_NAME" \
   --restart unless-stopped \
   --log-opt max-size=1m \
-  -v "VOLUME_NAME":/var/lib \
+  -v "$VOLUME_NAME":/var/lib \
   -e TS_STATE_DIR=/var/lib/tailscale \
   --network=host \
   --cap-add=NET_ADMIN \
