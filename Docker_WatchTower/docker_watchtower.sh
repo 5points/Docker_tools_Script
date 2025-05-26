@@ -4,6 +4,7 @@
 docker run -d \
     --name watchtower \
     --restart unless-stopped \
+    --log-opt max-file=1 \
     --log-opt max-size=10k \
     -v /etc/localtime:/etc/localtime \
     -v /var/run/docker.sock:/var/run/docker.sock \
