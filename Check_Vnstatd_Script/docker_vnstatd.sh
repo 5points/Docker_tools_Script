@@ -13,6 +13,7 @@ fi
 docker run -d \
   --name "$CONTAINER_NAME" \
   --log-opt max-size=10k \
+  --log-opt max-size=1 \
   --net=host \
   --restart=unless-stopped \
   --privileged=true \
