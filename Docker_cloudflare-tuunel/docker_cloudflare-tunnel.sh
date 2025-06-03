@@ -4,14 +4,7 @@
 # Cloudflare Tunnel Installation and Configuration Script
 ########################
 
-#step0-create cloudflard volume: docker volume create cloudflared
-#step1-create certificate: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel login
-#step2-create tunnel name: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel create <tunnelname>
-#step4-create tunnel config: wget -O $(docker volume inspect cloudflared | grep Mountpoint | awk '{print $NF}' | sed 's/[",]//g' | awk '{print $0 "/config.yml"}') https://github.com/5points/Docker_tools_Script/raw/main/Docker_cloudflare-tuunel/cloudflare-tunnel-config.yml
-#step4-edit tunnel config: vim $(docker volume inspect cloudflared | grep Mountpoint | awk '{print $NF}' | sed 's/[",]//g' | awk '{print $0 "/config.yml"}')
-#step5-add tunnel route dns: docker run -it --rm --privileged=true --user $(id -u) --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel --config /root/.cloudflared/config.yml route dns <tunnelname> <tunnel-hostname>
-
-# Function to check if a Docker volume exists
+# Check if a Docker volume exists
 check_docker_volume() {
     if docker volume inspect "$1" &>/dev/null; then
         echo "Volume '$1' already exists."
@@ -27,7 +20,7 @@ check_docker_volume() {
     fi
 }
 
-# Function to download a file
+# Download a file
 download_file() {
     local FILE_PATH="$1"
     local URL="$2"
@@ -42,7 +35,7 @@ download_file() {
     fi
 }
 
-# Function to create or overwrite a config file
+# Create or overwrite a config file
 create_or_overwrite_config_file() {
     local CONFIG_FILE="$1"
     local CONFIG_URL="$2"
@@ -57,14 +50,33 @@ create_or_overwrite_config_file() {
     download_file "$CONFIG_FILE" "$CONFIG_URL"
 }
 
-# Function to create a tunnel
+# Create a tunnel
 create_tunnel() {
     local TUNNEL_NAME="$1"
     echo "Creating tunnel..."
     docker run -it --rm --privileged=true --user "$(id -u)" --net host -v cloudflared:/root/.cloudflared cloudflare/cloudflared tunnel create "$TUNNEL_NAME"
 }
 
-# Main script
+# Get tunnel ID from the credentials file
+get_tunnel_id() {
+    local VOLUME_PATH="$1"
+    local TUNNEL_ID=""
+
+    # Find the credentials file (e.g., <tunnel-id>.json)
+    # Assumes only one .json file is created by cloudflared in the volume root
+    CRED_FILE=$(find "$VOLUME_PATH" -maxdepth 1 -name "*.json" -print -quit)
+
+    if [ -f "$CRED_FILE" ]; then
+        # Extract tunnel ID from the filename (remove path and .json suffix)
+        TUNNEL_ID=$(basename "$CRED_FILE" .json)
+        echo "$TUNNEL_ID"
+    else
+        echo "Error: Could not find Cloudflare Tunnel credentials file in $VOLUME_PATH." >&2
+        exit 1
+    fi
+}
+
+# --- Main Script ---
 
 # Check if cloudflared volume exists
 check_docker_volume "cloudflared"
@@ -88,14 +100,33 @@ CONFIG_FILE="${VOLUME_PATH}/${CONFIG_FILE_NAME}.yml"
 CONFIG_URL="https://github.com/5points/Docker_tools_Script/raw/main/Docker_cloudflare-tuunel/${CONFIG_FILE_NAME}.yml"
 create_or_overwrite_config_file "$CONFIG_FILE" "$CONFIG_URL"
 
-# Update tunnel name in config file
-sed -i "s/tunnel: .*/tunnel: '${TUNNEL_NAME}'/" "$CONFIG_FILE"
+# Update tunnel name in config file (this will be overwritten by ID later)
+sed -i "s/^tunnel: .*/tunnel: '${TUNNEL_NAME}'/" "$CONFIG_FILE"
 
 # Prompt user for tunnel hostname
 read -p "Enter the domain name for the tunnel-hostname (e.g., www.abc.xyz): " -e TUNNEL_HOSTNAME
 
-# Update tunnel hostname in config file
-sed -i "s/hostname: <tunnel-hostname>/hostname: \"$TUNNEL_HOSTNAME\"/" "$CONFIG_FILE"
+# Update tunnel hostname in config file.
+# Ensure standard spaces for indentation and accurate pattern matching.
+sed -i "s/^  - hostname: <tunnel-hostname>/  - hostname: \"$TUNNEL_HOSTNAME\"/" "$CONFIG_FILE"
+
+echo "Fetching tunnel ID from credentials file..."
+TUNNEL_ID=$(get_tunnel_id "$VOLUME_PATH")
+
+if [ -z "$TUNNEL_ID" ]; then
+    echo "Failed to retrieve tunnel ID. Exiting..."
+    exit 1
+fi
+
+echo "Detected Tunnel ID: $TUNNEL_ID"
+
+# Update config.yml: replace tunnel name with tunnel ID (more stable)
+sed -i "s/^tunnel: .*/tunnel: '${TUNNEL_ID}'/" "$CONFIG_FILE"
+
+# Update config.yml: replace credentials-file path with actual tunnel ID
+# Using '|' as a sed delimiter to avoid issues with '/' in paths.
+# Escape '.' in regex with '\.'
+sed -i "s|^credentials-file: /root/\.cloudflared/<tunnel-id>\.json$|credentials-file: /root/.cloudflared/${TUNNEL_ID}.json|" "$CONFIG_FILE"
 
 # Add tunnel route DNS
 echo "Adding tunnel route DNS..."
@@ -115,27 +146,28 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${DOCKER_NAME}$"; then
     fi
 fi
 
-# Docker run command
-DOCKER_RUN_COMMAND=$(cat <<'EOF'
-docker run -itd \
-   --name ${DOCKER_NAME} \
-   --restart unless-stopped \
-   --log-opt max-size=10k \
-   --log-opt max-size=1 \
-   --privileged=true \
-   --user \$(id -u) \
-   --net host \
-   -v cloudflared:/root/.cloudflared \
-   cloudflare/cloudflared \
-   tunnel --config /root/.cloudflared/${CONFIG_FILE_NAME}.yml run ${TUNNEL_NAME}
+# Docker run command definition.
+# Important: No trailing spaces after backslashes.
+# Important: 'EOF' markers must be on their own lines, without leading/trailing spaces.
+DOCKER_RUN_COMMAND=$(cat <<EOF
+docker run -itd \\
+   --name ${DOCKER_NAME} \\
+   --restart unless-stopped \\
+   --log-opt max-size=10k \\
+   --log-opt max-size=1 \\
+   --privileged=true \\
+   --user \$(id -u) \\
+   --net host \\
+   -v cloudflared:/root/.cloudflared \\
+   cloudflare/cloudflared tunnel --config /root/.cloudflared/${CONFIG_FILE_NAME}.yml run ${TUNNEL_NAME}
 EOF
 )
 
-# Output Docker run command
 echo "Docker run command:"
 echo "$DOCKER_RUN_COMMAND"
 
-# Write Docker run command to script file
+# Write the formatted Docker run command to a script file.
+# Double quotes around DOCKER_RUN_COMMAND are crucial to preserve newlines and formatting.
 echo "$DOCKER_RUN_COMMAND" > run_cloudflared_tunnel.sh
 
 echo "Cloudflare Tunnel container has been successfully started."
