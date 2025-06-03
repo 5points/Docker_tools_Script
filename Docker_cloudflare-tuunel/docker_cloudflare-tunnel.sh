@@ -149,19 +149,17 @@ fi
 # Docker run command definition.
 # Important: No trailing spaces after backslashes.
 # Important: 'EOF' markers must be on their own lines, without leading/trailing spaces.
-DOCKER_RUN_COMMAND=$(cat <<EOF
-docker run -itd \\
-   --name ${DOCKER_NAME} \\
-   --restart unless-stopped \\
-   --log-opt max-size=10k \\
-   --log-opt max-size=1 \\
-   --privileged=true \\
-   --user \$(id -u) \\
-   --net host \\
-   -v cloudflared:/root/.cloudflared \\
-   cloudflare/cloudflared tunnel --config /root/.cloudflared/${CONFIG_FILE_NAME}.yml run ${TUNNEL_NAME}
-EOF
-)
+DOCKER_RUN_COMMAND=$(printf "%s\n" \
+"docker run -itd \\" \
+"   --name ${DOCKER_NAME} \\" \
+"   --restart unless-stopped \\" \
+"   --log-opt max-size=10k \\" \
+"   --log-opt max-size=1 \\" \
+"   --privileged=true \\" \
+"   --user \$(id -u) \\" \
+"   --net host \\" \
+"   -v cloudflared:/root/.cloudflared \\" \
+"   cloudflare/cloudflared tunnel --config /root/.cloudflared/${CONFIG_FILE_NAME}.yml run ${TUNNEL_NAME}")
 
 echo "Docker run command:"
 echo "$DOCKER_RUN_COMMAND"
