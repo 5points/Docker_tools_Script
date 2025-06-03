@@ -160,7 +160,7 @@ DOCKER_RUN_COMMAND=$(printf "%s\n" \
 "   --name ${DOCKER_NAME} \\" \
 "   --restart unless-stopped \\" \
 "   --log-opt max-size=10k \\" \
-"   --log-opt max-size=1 \\" \
+"   --log-opt max-file=1 \\" \
 "   --privileged=true \\" \
 "   --user \$(id -u) \\" \
 "   --net host \\" \
