@@ -1,0 +1,26 @@
+# This is the yaml configuration file for dnsproxy with minimal working
+# configuration, all the options available can be seen with ./dnsproxy --help.
+# To use it within dnsproxy specify the --config-path=/<path-to-config.yaml>
+# option.  Any other command-line options specified will override the values
+# from the config file.
+# from: https://github.com/AdguardTeam/dnsproxy/blob/master/config.yaml.dist
+---
+bootstrap:
+  - "h3://8.8.8.8/dns-query"
+  - "h3://8.8.4.4/dns-query"
+listen-ports:
+  - 53
+upstream:
+  - "h3://dns.google/dns-query"
+  - "h3://mozilla.cloudflare-dns.com/dns-query"
+  - "h3://dns.adguard-dns.com/dns-query"
+  - "https://dns11.quad9.net/dns-query"
+fallback:
+  - "h3://1.1.1.1/dns-query"
+  - "h3://1.0.0.1/dns-query"
+timeout: '10s'
+tls-min-version: 1.2
+http3: true
+edns: true
+output: "/dev/stdout"
+verbose: true
